@@ -1,0 +1,31 @@
+<div class="card">
+  <h2>Alerts Dashboard</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Alert ID</th>
+        <th>Generator</th>
+        <th>Reading</th>
+        <th>Alert Type</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      @for (a of alerts; track a.alertId ?? $index) {
+        <tr>
+          <td>{{ a.alertId }}</td>
+          <td>{{ a.generatorId }}</td>
+          <td>{{ a.levelreadingId }}</td>
+          <td class="alert">{{ a.alertType }}</td>
+        </tr>
+      } @empty {
+        <tr>
+          <td colspan="4" style="text-align:center; opacity: 0.7;">
+            No alerts to display.
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>

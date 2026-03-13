@@ -1,0 +1,31 @@
+<div class="card">
+  <h2>Generator Dashboard</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Total Capacity</th>
+        <th>High Level</th>
+        <th>Low Level</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      @for (g of generators; track g.generatorId ?? $index) {
+        <tr>
+          <td>{{ g.generatorId }}</td>
+          <td>{{ g.generatorTotalCapacity }}</td>
+          <td>{{ g.generatorHighLevelpoint }}</td>
+          <td>{{ g.generatorLowLevelpoint }}</td>
+        </tr>
+      } @empty {
+        <tr>
+          <td colspan="4" style="text-align:center; opacity:0.7;">
+            No generators to display.
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>

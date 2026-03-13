@@ -1,0 +1,31 @@
+<div class="card">
+  <h2>Fuel Level Dashboard</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Reading ID</th>
+        <th>Generator ID</th>
+        <th>Fuel Level</th>
+        <th>Timestamp</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      @for (r of readings; track r.levelreadingId ?? $index) {
+        <tr>
+          <td>{{ r.levelreadingId }}</td>
+          <td>{{ r.generatorId }}</td>
+          <td>{{ r.currentFuellevel }}</td>
+          <td>{{ r.currentTimestamp }}</td>
+        </tr>
+      } @empty {
+        <tr>
+          <td colspan="4" style="text-align:center; opacity:0.7;">
+            No readings to display.
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>
