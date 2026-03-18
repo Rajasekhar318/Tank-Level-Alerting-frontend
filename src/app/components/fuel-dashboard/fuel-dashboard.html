@@ -1,31 +1,149 @@
-<div class="card">
-  <h2>Fuel Level Dashboard</h2>
-
-  <table>
-    <thead>
-      <tr>
-        <th>Reading ID</th>
-        <th>Generator ID</th>
-        <th>Fuel Level</th>
-        <th>Timestamp</th>
-      </tr>
-    </thead>
-
-    <tbody>
-      @for (r of readings; track r.levelreadingId ?? $index) {
-        <tr>
-          <td>{{ r.levelreadingId }}</td>
-          <td>{{ r.generatorId }}</td>
-          <td>{{ r.currentFuellevel }}</td>
-          <td>{{ r.currentTimestamp }}</td>
-        </tr>
-      } @empty {
-        <tr>
-          <td colspan="4" style="text-align:center; opacity:0.7;">
-            No readings to display.
-          </td>
-        </tr>
-      }
-    </tbody>
-  </table>
+<div class="dashboard-container">
+  <h2 class="page-title">Fuel Dashboard</h2>
+ 
+  <div class="split-layout">
+   
+    <div class="card chart-card">
+      <h3>Fuel Level (Tank {{ selectedGenerator }}) - History</h3>
+     
+      <div class="svg-wrapper">
+        @if (isLoading) {
+          <div class="empty-state">
+            <div class="loader"></div>
+            <strong>Aggregating telemetry...</strong>
+          </div>
+        } @else {
+          <svg viewBox="0 0 500 200" preserveAspectRatio="none" class="native-chart">
+            <defs>
+              <linearGradient id="greenGradient" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#10b981" stop-opacity="0.5" />
+                <stop offset="100%" stop-color="#a7f3d0" stop-opacity="0.05" />
+              </linearGradient>
+            </defs>
+ 
+            <g class="grid">
+              <line x1="0" y1="50" x2="500" y2="50" />
+              <line x1="0" y1="100" x2="500" y2="100" />
+              <line x1="0" y1="150" x2="500" y2="150" />
+            </g>
+ 
+            <path [attr.d]="svgAreaPath" class="chart-area" />
+            <path [attr.d]="svgLinePath" class="chart-line" />
+           
+            <line x1="0" [attr.y1]="svgThresholdY" x2="500" [attr.y2]="svgThresholdY" class="threshold-line" />
+            <text x="5" [attr.y]="svgThresholdY - 5" fill="#e11d48" font-size="10" font-weight="bold">Min Level Rule ({{ currentThreshold }} L)</text>
+ 
+            @for (pt of dataPoints; track $index) {
+              <circle [attr.cx]="pt.x" [attr.cy]="pt.y" r="3" fill="#10b981" />
+             
+              <text
+                [attr.x]="pt.isFirst ? pt.x + 6 : (pt.isLast ? pt.x - 6 : pt.x)"
+                [attr.y]="pt.isAlert ? pt.y + 16 : pt.y - 12"
+                fill="#334155"
+                font-size="11"
+                font-weight="700"
+                [attr.text-anchor]="pt.isFirst ? 'start' : (pt.isLast ? 'end' : 'middle')">
+                {{ pt.value }} L
+              </text>
+            }
+ 
+            @for (pt of alertPoints; track $index) {
+              <g [attr.transform]="'translate(' + pt.x + ',' + (pt.y - 10) + ')'">
+                <polygon points="-6,-4 6,-4 0,-14" fill="#f59e0b" />
+                <circle cx="0" cy="-2" r="1.5" fill="#f59e0b" />
+              </g>
+            }
+          </svg>
+        }
+      </div>
+ 
+      <div class="chart-filters">
+        <div class="filter-group">
+          <label>Viewing Data For:</label>
+          <div style="font-size: 16px; font-weight: 600; color: #0f172a; padding-top: 6px;">Tank {{ selectedGenerator }}</div>
+        </div>
+        <div class="filter-group">
+          <label>Date Range:</label>
+          <input type="text" class="form-control" value="📅 Last 7 Days" disabled style="background-color: #f8fafc; cursor: not-allowed; width: 200px;">
+        </div>
+      </div>
+    </div>
+ 
+    <div class="list-card">
+      <div class="list-card-title">GENERATORS ({{ generatorCards.length }})</div>
+     
+      <div class="gen-list-container">
+        @for (gen of generatorCards; track gen.id) {
+          <div class="gen-item"
+               [class.selected]="selectedGenerator === gen.id"
+               (click)="selectGenerator(gen.id)">
+           
+            <div class="gen-item-header">
+              <div class="gen-name">TANK-{{ gen.id }}</div>
+              <div class="gen-status-badge"
+                   [style.borderColor]="getBarColor(gen.latestLevel, gen.capacity)"
+                   [style.color]="getBarColor(gen.latestLevel, gen.capacity)">
+                {{ gen.status }}
+              </div>
+            </div>
+ 
+            <div class="gen-subtitle">Capacity: {{ gen.capacity | number }} L</div>
+ 
+            <div class="gen-progress-row">
+              <div class="gen-track">
+                <div class="gen-fill"
+                     [style.width]="(gen.latestLevel / gen.capacity * 100) + '%'"
+                     [style.backgroundColor]="getBarColor(gen.latestLevel, gen.capacity)">
+                </div>
+              </div>
+              <div class="gen-value" [style.color]="getBarColor(gen.latestLevel, gen.capacity)">
+                {{ (gen.latestLevel / gen.capacity * 100) | number:'1.0-0' }}%
+              </div>
+            </div>
+ 
+          </div>
+        }
+      </div>
+    </div>
+ 
+  </div>
+ 
+  <div class="card table-card">
+    <div class="table-header-title">
+      <h3>Raw Telemetry Data (Tank {{ selectedGenerator }})</h3>
+    </div>
+    <div class="table-responsive">
+      <table>
+        <thead>
+          <tr>
+            <th>Reading ID</th>
+            <th>Generator ID</th>
+            <th>Fuel Level (Liters)</th>
+            <th>Timestamp</th>
+          </tr>
+        </thead>
+        <tbody>
+          @if (!isLoading) {
+            @for (r of filteredReadings; track r.levelreadingId ?? $index) {
+              <tr>
+                <td class="text-muted">#{{ r.levelreadingId }}</td>
+                <td><strong>Tank {{ r.generatorId }}</strong></td>
+                <td>
+                  <span [style.color]="r.currentFuellevel <= currentThreshold ? '#e11d48' : '#334155'" style="font-weight: 600;">
+                    {{ r.currentFuellevel }} L
+                  </span>
+                </td>
+                <td>{{ r.currentTimestamp }}</td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="4" class="empty-state">No telemetry readings to display.</td>
+              </tr>
+            }
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+ 
 </div>

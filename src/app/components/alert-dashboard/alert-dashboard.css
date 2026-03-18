@@ -1,5 +1,152 @@
-.alert{
-color:red;
-font-weight:bold;
+/* Container Base */
+.dashboard-container {
+  padding: 24px;
+  font-family: system-ui, -apple-system, sans-serif;
+  color: #333;
 }
- 
+
+/* --- Top Panel Layout (Grid) --- */
+.top-panel {
+  display: grid;
+  /* Left column takes 300px, right column takes remaining space */
+  grid-template-columns: 300px 1fr; 
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+/* Make it stack vertically on smaller screens! */
+@media (max-width: 900px) {
+  .top-panel {
+    grid-template-columns: 1fr; 
+  }
+}
+
+/* --- Left Column Cards --- */
+.cards-column {
+  display: flex;
+  flex-direction: column;
+  gap: 16px; /* Space between vertical cards */
+}
+
+.stat-card {
+  background: #ffffff;
+  padding: 20px 24px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  border-left: 4px solid #3b82f6; 
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.stat-card:hover { transform: translateX(4px); box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1); }
+.stat-card.active { background-color: #f8fafc; border-left-width: 8px; }
+.danger-card { border-left-color: #ef4444; }
+.warning-card { border-left-color: #f59e0b; }
+
+.stat-title { color: #6b7280; font-size: 0.875rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px;}
+.stat-value { color: #111827; font-size: 2rem; font-weight: 700; line-height: 1; }
+
+/* --- Right Column Chart --- */
+.chart-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.chart-content {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 48px;
+  padding: 24px;
+}
+
+/* Pure CSS Pie Chart Magic */
+.pie-chart {
+  width: 220px;
+  height: 220px;
+  border-radius: 50%; /* Makes the square a perfect circle */
+  box-shadow: inset 0 0 10px rgba(0,0,0,0.1);
+  transition: background 0.3s ease;
+}
+
+/* --- Header Controls Layout --- */
+.header-controls {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap; /* Allows it to stack nicely on small screens */
+}
+
+/* --- Export Button --- */
+.btn-export {
+  background-color: #10b981; /* Professional Emerald Green */
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.btn-export:hover { background-color: #059669; }
+.btn-export:active { transform: scale(0.98); }
+
+
+/* --- Search Bar Styles --- */
+.header-with-search {
+  display: flex;
+  justify-content: space-between; /* Pushes title left, search right */
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.search-container {
+  position: relative;
+}
+
+.search-input {
+  padding: 10px 16px;
+  width: 250px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  color: #374151;
+  background-color: #f9fafb;
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+/* Gives a nice blue glow when the user clicks into the text box */
+.search-input:focus {
+  border-color: #3b82f6;
+  background-color: #ffffff;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); 
+}
+
+/* Legend Styling */
+.chart-legend { display: flex; flex-direction: column; gap: 12px; }
+.legend-item { display: flex; align-items: center; gap: 8px; font-size: 0.9rem; color: #4b5563; }
+.color-box { width: 16px; height: 16px; border-radius: 4px; display: inline-block; }
+
+
+/* --- Main Table Card (Unchanged) --- */
+.card { background: #ffffff; border-radius: 12px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05); overflow: hidden; }
+.card-header { padding: 20px 24px; border-bottom: 1px solid #f0f0f0; }
+.card-header h2 { margin: 0; font-size: 1.25rem; font-weight: 600; }
+.filter-text { font-size: 0.9rem; color: #6b7280; font-weight: normal; }
+.table-responsive { overflow-x: auto; }
+.modern-table { width: 100%; border-collapse: collapse; text-align: left; }
+.modern-table th, .modern-table td { padding: 16px 24px; border-bottom: 1px solid #f0f0f0; }
+.modern-table th { background-color: #fafafa; color: #6b7280; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; }
+.modern-table tbody tr:hover { background-color: #f9fafb; }
+.id-column { font-weight: 500; color: #4b5563; }
+.empty-state { text-align: center; padding: 40px !important; color: #9ca3af; }
+.badge { display: inline-block; padding: 4px 12px; border-radius: 999px; font-size: 0.75rem; font-weight: 600; }
+.badge-high { background-color: #fee2e2; color: #dc2626; }
+.badge-drop { background-color: #fef3c7; color: #d97706; }
+.badge-low { background-color: #e0f2fe; color: #0284c7; }
+.badge-default { background-color: #f3f4f6; color: #4b5563; }

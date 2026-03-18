@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http'; // <-- Added HttpHeaders
 import { Observable } from 'rxjs';
  
 import { Generator } from '../models/generator';
@@ -16,7 +16,8 @@ export class ApiService {
   constructor(private http: HttpClient) {}
  
   getGenerators(): Observable<Generator[]> {
-    return this.http.get<Generator[]>(this.baseUrl + "/generators");
+    const timestamp = new Date().getTime(); 
+    return this.http.get<Generator[]>(`${this.baseUrl}/generators?_t=${timestamp}`);
   }
  
   getGeneratorById(id:number){
@@ -24,15 +25,19 @@ export class ApiService {
   }
  
   getReadings(): Observable<Reading[]> {
-    return this.http.get<Reading[]>(this.baseUrl + "/readings");
+    const timestamp = new Date().getTime(); 
+    return this.http.get<Reading[]>(`${this.baseUrl}/readings?_t=${timestamp}`);
   }
  
   getReadingById(id:number){
     return this.http.get<Reading>(this.baseUrl + "/readings/" + id);
   }
  
+  // --- UPDATED: Added headers to prevent browser caching ---
+  // --- BULLETPROOF CACHE BUSTER ---
   getAlerts(): Observable<Alert[]> {
-    return this.http.get<Alert[]>(this.baseUrl + "/alerts");
+    const timestamp = new Date().getTime(); 
+    return this.http.get<Alert[]>(`${this.baseUrl}/alerts?_t=${timestamp}`);
   }
  
   getAlertById(id:number){
