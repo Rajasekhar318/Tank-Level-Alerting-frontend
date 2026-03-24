@@ -1,0 +1,148 @@
+<div class="page-background">
+  
+  <header class="header-section">
+    <h2 class="main-title">Command Center</h2>
+    <p class="green-subtitle">Set up devices, adjust their settings, and track their data.</p>
+  </header>
+
+  <div class="admin-grid">
+    
+    <div class="simple-card">
+      <div class="card-title">Generator and Fuel Machine Control</div>
+
+      <div class="form-group">
+        <label class="form-label">Target Generator</label>
+        <select class="neo-input"
+                [(ngModel)]="selectedGeneratorId"
+                (change)="updateSelectedGenerator()">
+          <option [ngValue]="null" disabled>Select an instance to manage...</option>
+          @for (gen of availableGenerators; track gen.generatorId) {
+            <option [ngValue]="gen.generatorId">Generator Tank {{ gen.generatorId }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="hardware-panels">
+        <div class="hw-panel">
+          <div class="hw-panel-top">
+            <h4>Generator Power</h4>
+            @if (selectedGenerator) {
+              <span class="status-pill" [class.green-pill]="selectedGenerator.status === 'ACTIVE'" [class.red-pill]="selectedGenerator.status !== 'ACTIVE'">
+                {{ selectedGenerator.status === 'ACTIVE' ? 'Active' : 'Offline' }}
+              </span>
+            } @else {
+              <span class="status-pill gray-pill">Standby</span>
+            }
+          </div>
+          <div class="hw-actions">
+            <button class="neo-btn btn-power-on" 
+                    (click)="startGenerator()" 
+                    [disabled]="!selectedGenerator || selectedGenerator.status === 'ACTIVE'">
+              Power On
+            </button>
+            <button class="neo-btn btn-power-off" 
+                    (click)="stopGenerator()" 
+                    [disabled]="!selectedGenerator || selectedGenerator.status !== 'ACTIVE'">
+              Shut Down
+            </button>
+          </div>
+        </div>
+
+        <div class="hw-panel">
+          <div class="hw-panel-top">
+            <h4>Fuel Machine</h4>
+            @if (fuelMachines && fuelMachines.length > 0) {
+              <span class="status-pill" [class.green-pill]="fuelMachines[0].status === 'ACTIVE'" [class.red-pill]="fuelMachines[0].status !== 'ACTIVE'">
+                {{ fuelMachines[0].status === 'ACTIVE' ? 'Running' : 'Stopped' }}
+              </span>
+            } @else {
+              <span class="status-pill gray-pill">Unknown</span>
+            }
+          </div>
+          <div class="hw-actions">
+            <button class="neo-btn btn-pump-on" 
+                    (click)="startFuelMachine()" 
+                    [disabled]="fuelMachines.length > 0 && fuelMachines[0].status === 'ACTIVE'">
+              Start Machine
+            </button>
+            <button class="neo-btn btn-pump-off" 
+                    (click)="stopFuelMachine()" 
+                    [disabled]="fuelMachines.length === 0 || fuelMachines[0].status !== 'ACTIVE'">
+              Stop Machine
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="simple-card">
+      <div class="card-title">Manual Data Entry</div>
+
+      @if (readingStatus.message) {
+        <div class="neo-alert" [ngClass]="readingStatus.type">{{ readingStatus.message }}</div>
+      }
+
+      <form [formGroup]="readingForm" (ngSubmit)="submitReading()">
+        <div class="form-group">
+          <label class="form-label">Target Generator</label>
+          <select class="neo-input" formControlName="generatorId">
+            <option [ngValue]="null" disabled selected>Select a generator...</option>
+            @for (gen of availableGenerators; track gen.generatorId) {
+              <option [ngValue]="gen.generatorId">
+                Tank {{ gen.generatorId }} (Max: {{ gen.generatorTotalCapacity }}L)
+              </option>
+            }
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label">Current Fuel Level (Liters)</label>
+          <input type="number" class="neo-input" formControlName="currentFuellevel" placeholder="e.g., 2500">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Reading Timestamp</label>
+          <input type="datetime-local" class="neo-input" formControlName="currentTimestamp">
+        </div>
+
+        <button type="submit" class="neo-btn btn-emerald full-width-btn" [disabled]="readingForm.invalid">
+          Push the data
+        </button>
+      </form>
+    </div>
+
+    <div class="simple-card">
+      <div class="card-title">New Generator Entry</div>
+
+      @if (genStatus.message) {
+        <div class="neo-alert" [ngClass]="genStatus.type">{{ genStatus.message }}</div>
+      }
+
+      <form [formGroup]="generatorForm" (ngSubmit)="submitGenerator()">
+        <div class="neo-info-banner">
+          Generator ID is generated automatically upon registration.
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label">Total Tank Capacity (Liters)</label>
+          <input type="number" class="neo-input" formControlName="generatorTotalCapacity" placeholder="e.g., 5000">
+        </div>
+
+        <div class="grid-2-col">
+          <div class="form-group">
+            <label class="form-label">High Alert Point (Liters)</label>
+            <input type="number" class="neo-input" formControlName="generatorHighLevelpoint" placeholder="e.g., 4500">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Low Alert Point (Liters)</label>
+            <input type="number" class="neo-input" formControlName="generatorLowLevelpoint" placeholder="e.g., 500">
+          </div>
+        </div>
+
+        <button type="submit" class="neo-btn btn-emerald full-width-btn" [disabled]="generatorForm.invalid">
+          Save Generator
+        </button>
+      </form>
+    </div>
+  </div>
+</div>

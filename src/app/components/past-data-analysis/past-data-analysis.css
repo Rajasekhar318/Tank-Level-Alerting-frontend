@@ -1,0 +1,83 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
+
+/* --- 1. GLOBALS & LAYOUT --- */
+.page-background { padding: 40px; font-family: 'Plus Jakarta Sans', sans-serif; background-color: #FFFFFF; min-height: 100vh; }
+.header-section { margin-bottom: 30px; }
+.main-title { margin: 0; font-size: 30px; font-weight: 800; color: #111827; }
+.green-subtitle { margin: 5px 0 0 0; font-size: 15px; font-weight: 600; color: #10B981; }
+.gray-text { color: #6B7280; font-weight: 600; }
+
+/* --- 2. LIVE PULSE BADGE --- */
+.live-status-pill {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 18px;
+  background-color: #ECFDF5; /* Soft Mint */
+  border: 1px solid #A7F3D0;
+  border-radius: 30px;
+  color: #059669; /* Forest Green */
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.pulse-dot {
+  height: 10px;
+  width: 10px;
+  background-color: #10B981; /* Emerald */
+  border-radius: 50%;
+  display: inline-block;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
+  70% { box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+}
+
+/* --- 3. GRID & CARDS --- */
+.chart-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Creates a clean 2x2 grid */
+  gap: 25px;
+}
+
+@media (max-width: 1024px) {
+  .chart-grid { grid-template-columns: 1fr; } /* Stacks into 1 column on smaller screens */
+}
+
+.simple-card { 
+  background: #FFFFFF; 
+  border: 1px solid #E5E7EB; 
+  border-radius: 20px; 
+  padding: 25px; 
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03); 
+  display: flex; 
+  flex-direction: column; 
+  transition: all 0.3s ease;
+}
+
+/* Slight hover effect to make the cards feel interactive */
+.simple-card:hover {
+  border-color: #D1D5DB;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+}
+
+.card-title { 
+  font-size: 18px; 
+  font-weight: 800; 
+  color: #111827; 
+  text-transform: uppercase; 
+  letter-spacing: 0.5px;
+}
+
+/* --- 4. CHART WRAPPER --- */
+.chart-wrapper {
+  position: relative;
+  height: 300px; /* Fixed height ensures Chart.js doesn't glitch or infinitely expand */
+  width: 100%;
+  margin-top: 10px;
+}

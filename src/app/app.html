@@ -1,46 +1,55 @@
-<div class="app-layout">
- 
-  <aside class="sidebar">
-    <div class="brand">
-      <div class="brand-icon">⚡</div>
-      <h2>Alert System</h2>
+<div class="saas-app-layout">
+  
+  <aside class="saas-sidebar">
+    <div class="saas-brand">
+      <div class="brand-logo">TAS</div>
+      <div class="brand-text">
+        <h2>Tank Alert System</h2>
+      </div>
     </div>
-   
-    <nav class="nav-links">
-      <a routerLink="/generators" routerLinkActive="active-link">
-        <span class="icon">🔋</span> Generators
-      </a>
-      <a routerLink="/fuel" routerLinkActive="active-link">
-        <span class="icon">⛽</span> Fuel Levels
-      </a>
-      <a routerLink="/alerts" routerLinkActive="active-link">
-        <span class="icon">🔔</span> Alerts
-      </a>
+    
+    <nav class="saas-nav-links">
+      <div class="nav-label">Main Menu</div>
+      <a routerLink="/generators" routerLinkActive="active-link">Generator Dashboard</a>
+      <a routerLink="/fuel" routerLinkActive="active-link">Fuel Dashboard</a>
+      <a routerLink="/alerts" routerLinkActive="active-link">System Alerts</a>
+      
+      <div class="nav-label mt-4">Management</div>
+      <a routerLink="/admin" routerLinkActive="active-link">Command Center</a>
+      <a routerLink="/past-analysis" routerLinkActive="active-link">Data Analysis</a>
     </nav>
   </aside>
- 
-  <div class="main-wrapper">
-    <header class="top-header">
-      <div class="actions">
-       
-        <div class="bell-icon" (click)="toggleNotifications()">
-          🔔
+  
+  <div class="saas-main-wrapper">
+    
+    <header class="saas-top-header">
+      <div class="header-breadcrumb">
+        <!-- <span class="breadcrumb-muted">Workspace</span>
+        <span class="breadcrumb-separator">/</span>
+        <span class="breadcrumb-active">Live Telemetry</span> -->
+      </div>
+      
+      <div class="saas-actions">
+        
+        <div class="notification-trigger" (click)="toggleNotifications()">
+          <span class="trigger-text">Alerts</span>
           @if (activeAlertsCount > 0) {
-            <span class="badge">{{ activeAlertsCount }}</span>
+            <span class="status-dot"></span>
+            <span class="alert-count">{{ activeAlertsCount }}</span>
           }
         </div>
  
         @if (showNotifications) {
-          <div class="notification-dropdown">
+          <div class="saas-dropdown">
             <div class="dropdown-header">
-              <h4>New Notifications</h4>
-              <span class="close-btn" (click)="toggleNotifications()">×</span>
+              <h4>Activity Feed</h4>
+              <button class="close-btn" (click)="toggleNotifications()">×</button>
             </div>
-           
+            
             <div class="dropdown-body">
               @for (alert of recentAlerts; track alert.alertId ?? $index) {
                 <div class="dropdown-item">
-                  <div class="dropdown-icon">⚠️</div>
+                  <div class="item-status-line"></div>
                   <div class="dropdown-text">
                     <strong>Tank {{ alert.generatorId }}</strong>
                     <span>{{ alert.alertType }}</span>
@@ -48,13 +57,14 @@
                 </div>
               } @empty {
                 <div class="dropdown-empty">
-                  No new notifications.
+                  <div class="empty-circle"></div>
+                  <p>All systems operating optimally.</p>
                 </div>
               }
             </div>
  
             <div class="dropdown-footer">
-              <a routerLink="/alerts" (click)="markAllAsViewed()">View All Alerts</a>
+              <a routerLink="/alerts" (click)="markAllAsViewed()">Open full log</a>
             </div>
           </div>
         }
@@ -62,10 +72,9 @@
       </div>
     </header>
  
-    <main class="main-content">
+    <main class="saas-main-content">
       <router-outlet (activate)="onPageActivate($event)"></router-outlet>
     </main>
  
   </div>
- 
 </div>

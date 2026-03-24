@@ -9,6 +9,10 @@ export interface Generator {
   generatorTotalCapacity: number;
   generatorHighLevelpoint: number;
   generatorLowLevelpoint: number;
+  // --- ADDED NEW DATABASE COLUMNS ---
+  status?: string;
+  lastStarted?: string;
+  lastStopped?: string;
 }
  
 @Component({
@@ -30,8 +34,8 @@ export class GeneratorDashboard implements OnInit {
  
   // --- KPI values ---
   totalGenerators: number = 0;
-  highAlertCount: number = 0; // Replaces totalCapacity
-  lowAlertCount: number = 0;  // Replaces avgHighAlert
+  highAlertCount: number = 0; 
+  lowAlertCount: number = 0;  
  
   constructor(private api: ApiService, private cdr: ChangeDetectorRef) {}
  
@@ -55,7 +59,7 @@ export class GeneratorDashboard implements OnInit {
     this.api.getAlerts().subscribe({
       next: (alerts: any[]) => {
         const activeAlerts = alerts || [];
-       
+        
         // Count how many alerts are categorized as "HIGH"
         this.highAlertCount = activeAlerts.filter(a =>
           a.alertType && (a.alertType.toUpperCase().includes('HIGH') || a.alertType.toUpperCase().includes('MAX'))
@@ -87,11 +91,12 @@ export class GeneratorDashboard implements OnInit {
     }
   }
  
+  // --- FIX: Now using the real 'status' from the SQL database! ---
   getGeneratorStatus(generator: Generator): string {
-    if (generator.generatorTotalCapacity <= 0) {
-      return 'Offline';
+    if (generator.status === 'ACTIVE') {
+      return 'Active';
     }
-    return 'Active';
+    return 'Offline'; // Handles 'INACTIVE' or null/undefined
   }
  
   sortBy(column: string) {
@@ -105,7 +110,7 @@ export class GeneratorDashboard implements OnInit {
  
   get filteredGenerators(): Generator[] {
     const keyword = this.searchText.trim().toLowerCase();
-   
+    
     let result = this.generators;
     if (keyword) {
       result = result.filter(g => String(g.generatorId).toLowerCase().includes(keyword));

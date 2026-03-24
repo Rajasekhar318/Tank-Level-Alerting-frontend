@@ -1,118 +1,97 @@
-<div class="dashboard-container">
- 
-  <div class="header-container">
-    <h2 class="page-title">Generator Dashboard</h2>
-    <input class="search-input" type="text" placeholder="Search by ID..." [(ngModel)]="searchText" />
+<div class="page-background">
+  
+  <header class="header-section">
+    <div>
+      <h2 class="main-title">Generator Dashboard</h2>
+      <p class="green-subtitle">Monitor real-time status of all generators.</p>
+    </div>
+    <input class="search-box" type="text" placeholder="Search by ID..." [(ngModel)]="searchText" />
+  </header>
+
+  <div class="three-column-grid">
+    <div class="simple-card">
+      <div class="kpi-label">Total Generators</div>
+      <div class="kpi-number">{{ totalGenerators }}</div>
+    </div>
+    
+    <div class="simple-card">
+      <div class="flex-row-between">
+        <span class="kpi-label">Total High Alerts</span>
+        <span class="status-pill orange-pill">Warning</span>
+      </div>
+      <div class="kpi-number">{{ highAlertCount }}</div>
+    </div>
+    
+    <div class="simple-card">
+      <div class="flex-row-between">
+        <span class="kpi-label">Total Low Alerts</span>
+        <span class="status-pill red-pill">Critical</span>
+      </div>
+      <div class="kpi-number">{{ lowAlertCount }}</div>
+    </div>
   </div>
- 
-  <div class="kpi-grid">
-    <div class="kpi-card">
-      <div class="kpi-header">
-        <span class="kpi-title">Total Generators</span>
-      </div>
-      <div class="kpi-value">{{ totalGenerators }}</div>
-    </div>
-   
-    <div class="kpi-card">
-      <div class="kpi-header">
-        <span class="kpi-title">Active High Alerts</span>
-        <span class="badge-orange">Warning</span>
-      </div>
-      <div class="kpi-value">{{ highAlertCount }}</div>
-    </div>
-   
-    <div class="kpi-card">
-      <div class="kpi-header">
-        <span class="kpi-title">Active Low Alerts</span>
-        <span style="background: #fee2e2; color: #991b1b; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 600;">Critical</span>
-      </div>
-      <div class="kpi-value">{{ lowAlertCount }}</div>
-    </div>
-  </div>
- 
-  <div class="card table-card">
-    <div class="table-header-title">
-      <h3>Fleet Status Table</h3>
-    </div>
- 
-    <div class="table-responsive">
+
+  <div class="simple-card">
+    <div class="card-title">Generators Status</div>
+
+    <div class="table-wrapper">
       <table>
+        
         <thead>
           <tr>
-            <th (click)="sortBy('generatorId')" class="sortable-header">
-              Generator ID
-              <span class="sort-arrow">{{ sortColumn === 'generatorId' ? (sortDirection === 'asc' ? '↑' : '↓') : '↕' }}</span>
-            </th>
-            <th (click)="sortBy('generatorTotalCapacity')" class="sortable-header">
-              Total Capacity
-              <span class="sort-arrow">{{ sortColumn === 'generatorTotalCapacity' ? (sortDirection === 'asc' ? '↑' : '↓') : '↕' }}</span>
-            </th>
-            <th (click)="sortBy('generatorHighLevelpoint')" class="sortable-header">
-              High Alert Point
-              <span class="sort-arrow">{{ sortColumn === 'generatorHighLevelpoint' ? (sortDirection === 'asc' ? '↑' : '↓') : '↕' }}</span>
-            </th>
-            <th (click)="sortBy('generatorLowLevelpoint')" class="sortable-header">
-              Low Alert Point
-              <span class="sort-arrow">{{ sortColumn === 'generatorLowLevelpoint' ? (sortDirection === 'asc' ? '↑' : '↓') : '↕' }}</span>
-            </th>
-            <th (click)="sortBy('status')" class="sortable-header">
-              Status
-              <span class="sort-arrow">{{ sortColumn === 'status' ? (sortDirection === 'asc' ? '↑' : '↓') : '↕' }}</span>
-            </th>
+            <th (click)="sortBy('generatorId')">Generator ID</th>
+            <th (click)="sortBy('generatorTotalCapacity')">Capacity</th>
+            <th (click)="sortBy('generatorHighLevelpoint')">High Alert</th>
+            <th (click)="sortBy('generatorLowLevelpoint')">Low Alert</th>
+            <th (click)="sortBy('status')">Status</th>
           </tr>
         </thead>
+        
         <tbody>
           @if (isLoading) {
             <tr>
-              <td colspan="5" class="empty-state">
-                <div class="loader"></div>
-                <strong>Fetching Fleet Status...</strong>
-              </td>
+              <td colspan="5" class="loading-text">Loading data from database...</td>
             </tr>
           } @else {
             @for (g of filteredGenerators; track g.generatorId ?? $index) {
               <tr>
-                <td><strong>Generator {{ g.generatorId }}</strong></td>
-               
-                <td><strong>{{ g.generatorTotalCapacity }} L</strong></td>
- 
+                <td><strong>Tank {{ g.generatorId }}</strong></td>
+                <td class="gray-text">{{ g.generatorTotalCapacity }} L</td>
+                
                 <td>
-                  <div class="thick-bar-container">
-                    <div class="thick-bar-fill"
+                  <div class="progress-bar-background">
+                    <div class="progress-bar-fill" 
                          [style.width]="getAlertBarWidth(g.generatorHighLevelpoint, g.generatorTotalCapacity)"
                          [style.backgroundColor]="getAlertBarColor(g.generatorHighLevelpoint, g.generatorTotalCapacity)">
-                      <span class="bar-text">{{ g.generatorHighLevelpoint }} L</span>
+                      {{ g.generatorHighLevelpoint }} L
                     </div>
                   </div>
                 </td>
- 
+
                 <td>
-                  <div class="thick-bar-container">
-                    <div class="thick-bar-fill"
+                  <div class="progress-bar-background">
+                    <div class="progress-bar-fill" 
                          [style.width]="getAlertBarWidth(g.generatorLowLevelpoint, g.generatorTotalCapacity)"
                          [style.backgroundColor]="getAlertBarColor(g.generatorLowLevelpoint, g.generatorTotalCapacity)">
-                      <span class="bar-text">{{ g.generatorLowLevelpoint }} L</span>
+                      {{ g.generatorLowLevelpoint }} L
                     </div>
                   </div>
                 </td>
-               
+                
                 <td>
                   @if (getGeneratorStatus(g) === 'Active') {
-                    <span style="background: #dcfce7; color: #166534; padding: 6px 14px; border-radius: 16px; font-size: 12px; font-weight: 600;">Active</span>
+                    <span class="status-pill green-pill">Active</span>
                   } @else if (getGeneratorStatus(g) === 'Offline') {
-                    <span style="background: #f1f5f9; color: #64748b; padding: 6px 14px; border-radius: 16px; font-size: 12px; font-weight: 600;">Offline</span>
+                    <span class="status-pill gray-pill">Offline</span>
                   } @else {
-                    <span class="status-warning">{{ getGeneratorStatus(g) }}</span>
+                    <span class="status-pill orange-pill">{{ getGeneratorStatus(g) }}</span>
                   }
                 </td>
-              </tr>
-            } @empty {
-              <tr>
-                <td colspan="5" class="empty-state">No generators found.</td>
               </tr>
             }
           }
         </tbody>
+
       </table>
     </div>
   </div>

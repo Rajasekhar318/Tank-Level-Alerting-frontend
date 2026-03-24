@@ -1,155 +1,55 @@
-/* Base Layout */
-.dashboard-container { padding: 32px; font-family: -apple-system, sans-serif; background-color: #D9EAFD; min-height: 100vh; }
-.page-title { margin-top: 0; font-size: 26px; color: #1e293b; font-weight: 700; margin-bottom: 24px; }
- 
-/* Split Layout */
-.split-layout { display: flex; gap: 24px; margin-bottom: 24px; align-items: stretch; }
-.card { background: #F8FAFC; border-radius: 8px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e2e8f0; }
-.chart-card { flex: 2; display: flex; flex-direction: column; }
- 
-h3 { margin-top: 0; font-size: 16px; color: #0f172a; margin-bottom: 16px; font-weight: 600; }
-.text-muted { color: #64748b; font-weight: normal; }
- 
-/* SVG Chart Styling */
-.svg-wrapper { width: 100%; height: 250px; border-left: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0; margin-bottom: 20px; position: relative; }
-.native-chart { width: 100%; height: 100%; overflow: visible; }
-.grid line { stroke: #f1f5f9; stroke-width: 1; }
- 
-.chart-area { fill: url(#greenGradient); }
-.chart-line { fill: none; stroke: #10b981; stroke-width: 2.5; stroke-linejoin: round; } /* Emerald Green */
-.threshold-line { fill: none; stroke: #C1121F; stroke-width: 2; stroke-dasharray: 6, 4; } /* Keep red for the warning rule */
- 
-/* Bottom Filters */
-.chart-filters { display: flex; gap: 20px; border-top: 1px solid #f1f5f9; padding-top: 20px; }
-.filter-group { display: flex; flex-direction: column; gap: 6px; }
-.filter-group label { font-size: 13px; color: #64748b; font-weight: 500; }
-.form-control { padding: 8px 14px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; color: #0f172a; }
- 
- 
-/* --- NEW: Dark Theme Generator List (1:1 with Image) --- */
-.list-card {
-  background-color: #F8FAFC; /* Dark background */
-  border: none;
-  padding: 24px;
-  flex: 1;
-  max-width: 350px;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-}
- 
-.list-card-title {
-  color: #4b5563;
-  font-size: 12px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  margin-bottom: 20px;
-  font-weight: 600;
-}
- 
-.gen-list-container {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  max-height: 380px;
-  overflow-y: auto;
-  padding-right: 8px;
-}
- 
-/* Custom Scrollbar for the dark card */
-.gen-list-container::-webkit-scrollbar { width: 6px; }
-.gen-list-container::-webkit-scrollbar-thumb { background-color: #334155; border-radius: 4px; }
- 
-/* Individual Generator Item */
-.gen-item {
-  background-color: #BCCCDC;
-  border: 1px solid #2d3748;
-  border-radius: 8px;
-  padding: 16px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
- 
-/* Hover Effect */
-.gen-item:hover {
-  border-color: #4b5563;
-  transform: translateY(-2px);
-}
- 
-/* Selected Active State */
-.gen-item.selected {
-  border-color: #10b981; /* Neon green border */
-  box-shadow: 0 0 12px rgba(16, 185, 129, 0.15); /* Soft neon glow */
-}
- 
-.gen-item-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 4px;
-}
- 
-.gen-name {
-  color: #ffffff;
-  font-size: 16px;
-  font-weight: 600;
-  letter-spacing: 1px;
-}
- 
-.gen-status-badge {
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 1px;
-  border: 1px solid;
-}
- 
-.gen-subtitle {
-  color: #64748b;
-  font-size: 12px;
-  margin-bottom: 16px;
-}
- 
-/* Progress Bar inside dark card */
-.gen-progress-row {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
- 
-.gen-track {
-  flex: 1;
-  height: 6px;
-  background-color: #334155;
-  border-radius: 3px;
-  overflow: hidden;
-}
- 
-.gen-fill {
-  height: 100%;
-  border-radius: 3px;
-  transition: width 0.5s ease, background-color 0.5s ease;
-}
- 
-.gen-value {
-  font-size: 14px;
-  font-weight: 600;
-  min-width: 40px;
-  text-align: right;
-}
- 
- 
-/* Table Styling */
-.table-card { padding: 0; }
-.table-header-title { padding: 20px 24px; border-bottom: 1px solid #e2e8f0; }
-.table-responsive { overflow-x: auto; }
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
+
+/* --- 1. GLOBALS & LAYOUT --- */
+.page-background { padding: 40px; font-family: 'Plus Jakarta Sans', sans-serif; background-color: #FFFFFF; min-height: 100vh; }
+.header-section { margin-bottom: 30px; }
+.main-title { margin: 0; font-size: 30px; font-weight: 800; color: #111827; }
+.green-subtitle { margin: 5px 0 0 0; font-size: 15px; font-weight: 600; color: #10B981; }
+
+.two-column-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 25px; margin-bottom: 25px; align-items: stretch; }
+
+/* --- 2. PREMIUM CARDS --- */
+.simple-card { background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 20px; padding: 25px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03); display: flex; flex-direction: column; }
+.card-title { font-size: 18px; font-weight: 800; color: #111827; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 0.5px;}
+
+/* --- 3. CHART STYLES --- */
+.svg-chart-wrapper { width: 100%; height: 280px; border-left: 1px solid #E5E7EB; border-bottom: 1px solid #E5E7EB; margin-bottom: 20px; position: relative; }
+.full-size-svg { width: 100%; height: 100%; overflow: visible; }
+
+.grid-line { stroke: #F3F4F6; stroke-width: 1; }
+.axis-text { fill: #9CA3AF; font-size: 10px; text-anchor: end; font-weight: 600; }
+.svg-filled-area { fill: url(#emeraldGradient); }
+.svg-solid-line { fill: none; stroke: #10B981; stroke-width: 3; stroke-linejoin: round; }
+.red-dashed-line { fill: none; stroke: #EF4444; stroke-width: 2; stroke-dasharray: 6, 4; }
+
+/* Tooltip */
+.floating-tooltip { position: absolute; background: rgba(255, 255, 255, 0.95); border: 1px solid #E5E7EB; padding: 12px 16px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); pointer-events: none; transform: translate(-50%, -110%); }
+
+/* Filters */
+.filter-row { display: flex; gap: 20px; border-top: 1px solid #F3F4F6; padding-top: 20px; margin-top: auto; }
+.filter-label { display: block; font-size: 12px; color: #6B7280; font-weight: 700; text-transform: uppercase; margin-bottom: 5px; }
+.date-input { padding: 10px 14px; border: 1px solid #E5E7EB; border-radius: 10px; font-weight: 600; outline: none; transition: 0.3s; }
+.date-input:focus { border-color: #10B981; }
+
+/* --- 4. LIST & MINI BARS --- */
+.scrollable-list { display: flex; flex-direction: column; gap: 12px; max-height: 380px; overflow-y: auto; padding-right: 10px; }
+.clickable-gen-box { border: 1px solid #E5E7EB; border-radius: 12px; padding: 16px; cursor: pointer; transition: 0.2s; }
+.clickable-gen-box:hover { background-color: #F9FAFB; }
+.active-gen-box { border-color: #10B981; background-color: #ECFDF5; }
+.gen-box-name { color: #111827; font-size: 15px; font-weight: 800; margin-bottom: 5px; }
+
+.mini-progress-bg { height: 6px; background: #E5E7EB; border-radius: 4px; overflow: hidden; margin-top: 10px; }
+.mini-progress-fill { height: 100%; border-radius: 4px; transition: 0.5s; }
+
+/* --- 5. TABLE STYLES --- */
 table { width: 100%; border-collapse: collapse; text-align: left; }
-th { background: #ffffff; padding: 16px 24px; color: #0f172a; font-size: 13px; font-weight: 600; border-bottom: 2px solid #e2e8f0; }
-td { padding: 16px 24px; border-bottom: 1px solid #f1f5f9; font-size: 14px; color: #334155; }
-tr:hover { background: #f8fafc; }
- 
-/* Loader */
-.empty-state { text-align: center; padding: 60px; color: #64748b; font-size: 14px; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; }
-.loader { border: 3px solid #f1f5f9; border-top: 3px solid #3b82f6; border-radius: 50%; width: 24px; height: 24px; animation: spin 1s linear infinite; margin-bottom: 12px; }
-@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
- 
+th { padding: 15px 10px; font-size: 12px; color: #6B7280; text-transform: uppercase; border-bottom: 2px solid #E5E7EB; }
+td { padding: 15px 10px; font-size: 14px; border-bottom: 1px solid #F3F4F6; }
+.loading-text { text-align: center; padding: 40px; color: #6B7280; font-weight: 600; }
+
+/* --- 6. PAGINATION CONTROLS --- */
+.pagination-container { display: flex; justify-content: space-between; align-items: center; padding-top: 20px; border-top: 1px solid #F3F4F6; margin-top: 10px; }
+.page-btn { padding: 8px 16px; background: #F9FAFB; border: 1px solid #E5E7EB; border-radius: 8px; color: #111827; font-weight: 700; font-size: 13px; cursor: pointer; transition: 0.2s; font-family: inherit; }
+.page-btn:hover:not(:disabled) { background: #ECFDF5; border-color: #10B981; color: #059669; }
+.page-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.page-info { font-size: 13px; color: #6B7280; font-weight: 700; }

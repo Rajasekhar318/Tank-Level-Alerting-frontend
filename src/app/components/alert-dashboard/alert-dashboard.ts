@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core'; // <-- Added ChangeDetectorRef
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ApiService } from '../../services/api.service';
 import { Alert } from '../../models/alert'; 
@@ -18,7 +18,10 @@ export class AlertDashboard implements OnInit, OnDestroy {
 
   private refreshSub?: Subscription;
 
-  // --- UPDATED: Injected ChangeDetectorRef ---
+  // --- NEW: Pagination State ---
+  currentPage: number = 1;
+  itemsPerPage: number = 5;
+
   constructor(
     private api: ApiService,
     private cdr: ChangeDetectorRef 
@@ -29,7 +32,6 @@ export class AlertDashboard implements OnInit, OnDestroy {
 
     this.refreshSub = interval(10000).subscribe(() => {
       this.loadData();
-      console.log('Dashboard auto-refreshed at', new Date().toLocaleTimeString()); 
     });
   }
 
@@ -39,20 +41,18 @@ export class AlertDashboard implements OnInit, OnDestroy {
     }
   }
 
-  // --- UPDATED: Forces UI to repaint with new data ---
   loadData() {
     this.api.getAlerts().subscribe((data: Alert[]) => {
-      // Creates a completely new array reference in memory
       this.alerts = [...(data ?? [])]; 
-      
-      // Forces the UI to repaint
+      // Reverse so newest alerts show up on page 1
+      this.alerts.reverse(); 
       this.cdr.detectChanges(); 
     });
   }
 
-  // --- EXPORT TO CSV LOGIC ---
   exportToCSV() {
     const headers = ['Alert ID', 'Generator', 'Reading', 'Alert Type'];
+    // Uses filteredAlerts so it exports everything in the current search, not just the page
     const rows = this.filteredAlerts.map(a => 
       `${a.alertId},${a.generatorId},${a.levelreadingId},${a.alertType}`
     );
@@ -67,7 +67,6 @@ export class AlertDashboard implements OnInit, OnDestroy {
     document.body.removeChild(link);
   }
 
-  // --- GETTERS & FORMATTERS ---
   get totalAlerts(): number { return this.alerts.length; }
   get highRiskAlerts(): number { return this.alerts.filter(a => a.alertType === 'HIGH_LEVEL_ALERT').length; }
   get suddenDrops(): number { return this.alerts.filter(a => a.alertType === 'SUDDEN_DROP_ALERT').length; }
@@ -84,21 +83,45 @@ export class AlertDashboard implements OnInit, OnDestroy {
     };
   }
   
-  setFilter(filterType: string) { this.currentFilter = filterType; }
-  updateSearch(event: Event) { this.searchTerm = (event.target as HTMLInputElement).value.toLowerCase(); }
+  // FIX: Reset to page 1 on filter or search changes
+  setFilter(filterType: string) { 
+    this.currentFilter = filterType; 
+    this.currentPage = 1; 
+  }
+  
+  updateSearch(event: Event) { 
+    this.searchTerm = (event.target as HTMLInputElement).value.toLowerCase(); 
+    this.currentPage = 1; 
+  }
 
   get filteredAlerts(): Alert[] {
     let result = this.alerts;
     if (this.currentFilter !== 'ALL') { result = result.filter(a => a.alertType === this.currentFilter); }
     if (this.searchTerm.trim() !== '') {
       result = result.filter(a => 
-        a.generatorId?.toString().includes(this.searchTerm) ||
-        a.alertId?.toString().includes(this.searchTerm) ||
         a.levelreadingId?.toString().includes(this.searchTerm) ||
         this.formatType(a.alertType).toLowerCase().includes(this.searchTerm)
       );
     }
     return result;
+  }
+
+  // --- NEW: Pagination Getters & Methods ---
+  get totalPages(): number {
+    return Math.ceil(this.filteredAlerts.length / this.itemsPerPage) || 1;
+  }
+
+  get paginatedAlerts(): Alert[] {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    return this.filteredAlerts.slice(startIndex, startIndex + this.itemsPerPage);
+  }
+
+  nextPage() {
+    if (this.currentPage < this.totalPages) this.currentPage++;
+  }
+
+  prevPage() {
+    if (this.currentPage > 1) this.currentPage--;
   }
 
   formatType(type: string | undefined): string { if (!type) return 'UNKNOWN'; return type.replace(/_/g, ' '); }
