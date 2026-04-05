@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { PastDataAnalysisComponent } from './past-data-analysis'; // Name updated here
+import { PastDataAnalysisComponent } from './past-data-analysis'; 
 import { ApiService } from '../../services/api.service';
 
 describe('PastDataAnalysisComponent', () => {

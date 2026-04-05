@@ -167,14 +167,14 @@
 .notification-trigger {
   display: flex;
   align-items: center;
-  gap: 12px; /* Slightly widened the gap to match the bigger size */
+  gap: 12px; 
   background: #F9FAFB; 
   border: 1px solid #E5E7EB;
-  padding: 12px 24px; /* INCREASED: Makes the button taller and wider */
-  border-radius: 30px; /* INCREASED: Keeps the ends perfectly round */
+  padding: 12px 24px; 
+  border-radius: 30px; 
   cursor: pointer;
-  font-weight: 900; /* Note: 900 is the highest standard weight for browsers! */
-  font-size: 15px; /* INCREASED: Makes the text easier to read */
+  font-weight: 900; 
+  font-size: 15px; 
   color: #000000;
   transition: all 0.2s ease;
 }

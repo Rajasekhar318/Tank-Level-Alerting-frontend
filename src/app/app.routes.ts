@@ -3,8 +3,6 @@ import { GeneratorDashboard } from './components/generator-dashboard/generator-d
 import { FuelDashboard } from './components/fuel-dashboard/fuel-dashboard';
 import { AlertDashboard } from './components/alert-dashboard/alert-dashboard';
 import { AdminPanel } from './components/admin-panel/admin-panel';
-
-// FIX: Added './components/' to the path so it matches the rest of your app!
 import { PastDataAnalysisComponent } from './components/past-data-analysis/past-data-analysis';
  
 export const routes: Routes = [

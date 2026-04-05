@@ -178,7 +178,7 @@ export class FuelDashboard implements OnInit {
     this.alertPoints = [];
     
     // Reverse it temporarily to draw the chart left-to-right (oldest to newest)
-    const chartReadings = [...this.filteredReadings].reverse();
+    const chartReadings = [...this.filteredReadings];
 
     chartReadings.forEach((reading, index) => {
       const x = this.chartPaddingLeft + (index * stepX);

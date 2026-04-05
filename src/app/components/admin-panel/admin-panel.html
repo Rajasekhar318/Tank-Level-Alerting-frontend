@@ -50,7 +50,7 @@
 
         <div class="hw-panel">
           <div class="hw-panel-top">
-            <h4>Fuel Machine</h4>
+            <h4>Fuel <br> Machine</h4>
             @if (fuelMachines && fuelMachines.length > 0) {
               <span class="status-pill" [class.green-pill]="fuelMachines[0].status === 'ACTIVE'" [class.red-pill]="fuelMachines[0].status !== 'ACTIVE'">
                 {{ fuelMachines[0].status === 'ACTIVE' ? 'Running' : 'Stopped' }}
